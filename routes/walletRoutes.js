@@ -1,6 +1,4 @@
-const {createWallet, listWallets, getWallet, updateWallet, deleteWallet,
-  //  deposit, Retrait 
-  } = require("../controllers/walletController");
+const {createWallet, listWallets, getWallet, updateWallet, deleteWallet, deposit, Retrait} = require("../controllers/walletController");
 
 function handleWalletRoutes(req, res, body) {
   const urlParts = req.url.split("/");
@@ -31,18 +29,18 @@ function handleWalletRoutes(req, res, body) {
     return deleteWallet(req, res);
   }
 
-//   // POST /wallets/{id}/deposit (Dépôt)
-//   if (req.url.startsWith("/wallets/") && req.url.endsWith("/deposit") && req.method === "POST") {
-//     return deposit(req, res, body);
-//   }
+  // POST /wallets/{id}/deposit (Dépôt)
+  if (req.url.startsWith("/wallets/") && req.url.endsWith("/deposit") && req.method === "POST") {
+    return deposit(req, res, body);
+  }
 
-//   // POST /wallets/{id}/Retraits (Retrait)
-//   if (req.url.startsWith("/wallets/") && req.url.endsWith("/Retrait") && req.method === "POST") {
-//     return Retrait(req, res, body);
-//   }
+  // POST /wallets/{id}/Retraits (Retrait)
+  if (req.url.startsWith("/wallets/") && req.url.endsWith("/Retrait") && req.method === "POST") {
+    return Retrait(req, res, body);
+  }
 
-//   res.writeHead(404, { "Content-Type": "application/json" });
-//   res.end(JSON.stringify({ error: "Wallet route not found" }));
+  res.writeHead(404, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ error: "Wallet route not found" }));
 }
 
 module.exports = handleWalletRoutes;

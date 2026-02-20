@@ -103,81 +103,81 @@ function deleteWallet(req, res) {
   }));
 }
 
-// // DEPOSIT
-// function deposit(req, res, body) {
-//   const parts = req.url.split("/");
-//   const walletId = parseInt(parts[2]);
+// DEPOSIT
+function deposit(req, res, body) {
+  const parts = req.url.split("/");
+  const walletId = parseInt(parts[2]);
 
-//   const { amount } = JSON.parse(body);
+  const { amount } = JSON.parse(body);
 
-//   if (!amount || amount <= 0) {
-//     res.writeHead(400, { "Content-Type": "application/json" });
-//     return res.end(JSON.stringify({ error: "Le montant doit être strictement positif" }));
-//   }
+  if (!amount || amount <= 0) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Le montant doit être strictement positif" }));
+  }
 
-//   const wallet = wallets.find(w => w.id === walletId);
+  const wallet = wallets.find(w => w.id === walletId);
 
-//   if (!wallet) {
-//     res.writeHead(404, { "Content-Type": "application/json" });
-//     return res.end(JSON.stringify({ error: "wallet non trouvé" }));
-//   }
+  if (!wallet) {
+    res.writeHead(404, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "wallet non trouvé" }));
+  }
 
-//   wallet.sold += amount;
+  wallet.sold += amount;
 
-//   res.writeHead(200, { "Content-Type": "application/json" });
-//   res.end(JSON.stringify({
-//     message: "Deposit successful",
-//     wallet
-//   }));
-// }
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({
+    message: "Deposit successful",
+    wallet
+  }));
+}
 
-// //Retrait
-// function Retrait(req, res, body) {
-//   const parts = req.url.split("/");
-//   const walletId = parseInt(parts[2]);
+//Retrait
+function Retrait(req, res, body) {
+  const parts = req.url.split("/");
+  const walletId = parseInt(parts[2]);
 
-//   const { amount } = JSON.parse(body);
+  const { amount } = JSON.parse(body);
 
-//   // Vérification du montant
-//   if (!amount || amount <= 0) {
-//     res.writeHead(400, { "Content-Type": "application/json" });
-//     return res.end(JSON.stringify({ error: "Le montant doit être strictement positif" }));
-//   }
+  // Vérification du montant
+  if (!amount || amount <= 0) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Le montant doit être strictement positif" }));
+  }
 
-//   // Recherche du portefeuille
-//   const wallet = wallets.find(w => w.id === walletId);
+  // Recherche du portefeuille
+  const wallet = wallets.find(w => w.id === walletId);
 
-//   if (!wallet) {
-//     res.writeHead(404, { "Content-Type": "application/json" });
-//     return res.end(JSON.stringify({ error: "Portefeuille non trouvé" }));
-//   }
+  if (!wallet) {
+    res.writeHead(404, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Portefeuille non trouvé" }));
+  }
 
-//   // Vérification du solde suffisant
-//   if (wallet.sold < amount) {
-//     res.writeHead(400, { "Content-Type": "application/json" });
-//     return res.end(JSON.stringify({ 
-//       error: "Solde insuffisant",
-//       available: wallet.sold,
-//       requested: amount 
-//     }));
-//   }
+  // Vérification du solde suffisant
+  if (wallet.sold < amount) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ 
+      error: "Solde insuffisant",
+      available: wallet.sold,
+      requested: amount 
+    }));
+  }
 
-//   // Effectuer le retrait
-//   wallet.sold -= amount;
+  // Effectuer le retrait
+  wallet.sold -= amount;
 
-//   res.writeHead(200, { "Content-Type": "application/json" });
-//   res.end(JSON.stringify({
-//     message: "Retrait effectué avec succès",
-//     wallet
-//   }));
-// }
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({
+    message: "Retrait effectué avec succès",
+    wallet
+  }));
+}
 
 
 module.exports = {
   createWallet,
   listWallets,
-  // deposit,
-  // Retrait,
+  deposit,
+  Retrait,
   getWallet,
   deleteWallet,
   updateWallet
