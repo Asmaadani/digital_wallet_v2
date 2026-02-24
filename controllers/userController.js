@@ -1,103 +1,76 @@
-const { users } = require("../data/data");
+const { users } = require("../data/store");
 
-// Create User
-function createUser(req, res, body) {
-  const { name } = JSON.parse(body);
+// CREATE
+exports.createUser = (req, res) => {
+  const { name, email, phone } = req.body;
 
-  if (!name) {
-    res.writeHead(400, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "Name is required" }));
+  if (!name || !email || !phone) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   const newUser = {
     id: users.length + 1,
-    name
+    name,
+    email,
+    phone
   };
 
   users.push(newUser);
 
-  res.writeHead(201, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(newUser));
-}
+  res.status(201).json(newUser);
+};
 
-// Get All Users
-function listUsers(req, res) {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(users));
-}
+// GET ALL
+exports.getUsers = (req, res) => {
+  res.status(200).json(users);
+};
 
-// Get User by ID
-function getUser(req, res) {
-  const parts = req.url.split("/");
-  const userId = parseInt(parts[2]);
+// GET ONE
+exports.getUser = (req, res) => {
+  const id = parseInt(req.params.id);
 
-  const user = users.find(u => u.id === userId);
+  const user = users.find(u => u.id === id);
 
   if (!user) {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "Utilisateur non trouvé" }));
+    return res.status(404).json({ message: "User not found" });
   }
 
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(user));
-}
+  res.status(200).json(user);
+};
 
+// UPDATE
+exports.updateUser = (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name, email, phone } = req.body;
 
-// Update User
-function updateUser(req, res, body) {
-  const parts = req.url.split("/");
-  const userId = parseInt(parts[2]);
+  const user = users.find(u => u.id === id);
 
-  const { name } = JSON.parse(body);
-
-  if (!name) {
-    res.writeHead(400, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "Name is required" }));
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
   }
 
-  const userIndex = users.findIndex(u => u.id === userId);
-
-  if (userIndex === -1) {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "Utilisateur non trouvé" }));
+  if (!name || !email || !phone) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
-  // Mettre à jour l'utilisateur
-  users[userIndex].name = name;
+  user.name = name;
+  user.email = email;
+  user.phone = phone;
 
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({
-    message: "Utilisateur mis à jour avec succès",
-    user: users[userIndex]
-  }));
-}
+  res.status(200).json(user);
+};
 
-// Delete User
-function deleteUser(req, res) {
-  const parts = req.url.split("/");
-  const userId = parseInt(parts[2]);
+// DELETE
+exports.deleteUser = (req, res) => {
+  const id = parseInt(req.params.id);
 
-  const userIndex = users.findIndex(u => u.id === userId);
+  const index = users.findIndex(u => u.id === id);
 
-  if (userIndex === -1) {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "Utilisateur non trouvé" }));
+  if (index === -1) {
+    return res.status(404).json({ message: "User not found" });
   }
 
-  // Supprimer l'utilisateur
-  const deletedUser = users.splice(userIndex, 1)[0];
+  users.splice(index, 1);
 
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({
-    message: "Utilisateur supprimé avec succès",
-    user: deletedUser
-  }));
-}
-
-module.exports = {
-  createUser,
-  listUsers,
-  getUser,
-  updateUser,
-  deleteUser
+  res.status(200).json({ message: "User deleted successfully" });
 };

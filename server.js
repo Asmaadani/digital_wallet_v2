@@ -1,40 +1,22 @@
-const http = require("http");
-const handleUserRoutes = require("./routes/userRoutes");
-const handleWalletRoutes = require("./routes/walletRoutes");
+const express = require("express");
 
-function getRequestBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = "";
+const userRoutes = require("./routes/userRoutes");
+const walletRoutes = require("./routes/walletRoutes");
 
-    req.on("data", chunk => {
-      body += chunk.toString();
-    });
+const app = express();
 
-    req.on("end", () => {
-      resolve(body);
-    });
+// Middleware باش نقراو JSON
+app.use(express.json());
 
-    req.on("error", err => {
-      reject(err);
-    });
-  });
-}
+// Routes
+app.use("/users", userRoutes);
+app.use("/wallets", walletRoutes);
 
-const server = http.createServer(async (req, res) => {
-  const body = await getRequestBody(req);
-
-  if (req.url.startsWith("/users")) {
-    return handleUserRoutes(req, res, body);
-  }
-
-  if (req.url.startsWith("/wallets")) {
-    return handleWalletRoutes(req, res, body);
-  }
-
-  res.writeHead(404, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ error: "Route not found" }));
+// Global 404
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
-server.listen(3000, () => {
+app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
