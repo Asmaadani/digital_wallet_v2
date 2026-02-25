@@ -1,7 +1,7 @@
 const express = require("express");
 const userRoutes = require("./routes/userRoutes");
 const walletRoutes = require("./routes/walletRoutes");
-const errorMiddleware = require("/middlewares/errorMiddleware");
+const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
 
